@@ -1,8 +1,6 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient } = require("mongodb");
 
-
-const database = "primaryDateNightDb";
-require('dotenv').config();
+require("dotenv").config();
 
 const username = encodeURIComponent(process.env.USERNAME);
 const password = encodeURIComponent(process.env.PASSWORD);
