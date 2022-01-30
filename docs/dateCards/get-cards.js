@@ -12,6 +12,13 @@ module.exports = {
         required: true,
         description: "User unique ID",
       },
+      {
+        name: "",
+        in: "path",
+        schema: pathParamId,
+        required: false,
+        description: "User unique ID",
+      },
     ],
     responses: {
       200: {

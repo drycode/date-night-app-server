@@ -1,4 +1,4 @@
-const { routes } = require("../servers");
+const { routes } = require("../routes");
 const components = require("./components");
 const dateCards = require("./dateCards");
 const info = require("./generalInfo");

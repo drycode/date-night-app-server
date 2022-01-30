@@ -4,7 +4,7 @@ module.exports = {
     tags: ["Cards CRUD operations"],
     description: "Create a card",
     operationId: "createCard",
-    params: [
+    parameters: [
       {
         name: "userId",
         in: "path",

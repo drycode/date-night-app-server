@@ -23,8 +23,8 @@ async function findUser(users) {
   return document;
 }
 
-async function findAllCards(userId, cards) {
-  const documents = await cards.find({ userId });
+async function findCards(userId, cards, filter = {}) {
+  const documents = await cards.find({ userId, filter });
   return documents.toArray();
 }
 
@@ -40,7 +40,7 @@ module.exports = {
   listCollections,
   listDatabases,
   findUser,
-  findAllCards,
+  findCards,
   putDateCard,
   deleteCard,
 };

@@ -46,6 +46,22 @@ const dateCardPayload = {
   },
 };
 
+const deletedResponse = {
+  type: "object",
+  properties: {
+    acknowledged: {
+      type: "boolean",
+      description: "Whether the db recieved and responded to the request",
+      example: true,
+    },
+    deletedCount: {
+      type: "number",
+      description: "Number of records removed by the deletion request",
+      example: 1,
+    },
+  },
+};
+
 module.exports = {
   pathParamId,
 
@@ -66,6 +82,7 @@ module.exports = {
           ...dateCardPayload,
         },
       },
+      DeletedResponse: deletedResponse,
       Error: {
         type: "object",
         properties: {
