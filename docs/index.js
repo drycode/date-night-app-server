@@ -1,5 +1,8 @@
 const { routes } = require("../servers");
 const components = require("./components");
+const dateCards = require("./dateCards");
+const getCard = require("./dateCards/get-card");
+const getCards = require("./dateCards/get-cards");
 const info = require("./generalInfo");
 const servers = require("./servers");
 const tags = require("./tags");
@@ -10,4 +13,5 @@ module.exports = {
   ...routes,
   ...tags,
   ...components,
+  ...dateCards,
 };

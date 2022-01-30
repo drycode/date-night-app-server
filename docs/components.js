@@ -46,22 +46,21 @@ module.exports = {
           userId: { $ref: "#/components/schemas/_id" },
         },
       },
-
-      //   Error: {
-      //     type: "object", //data type
-      //     properties: {
-      //       message: {
-      //         type: "string", // data type
-      //         description: "Error message", // desc
-      //         example: "Not found", // example of an error message
-      //       },
-      //       internal_code: {
-      //         type: "string", // data type
-      //         description: "Error internal code", // desc
-      //         example: "Invalid parameters", // example of an error internal code
-      //       },
-      //     },
-      //   },
+      Error: {
+        type: "object", //data type
+        properties: {
+          message: {
+            type: "string", // data type
+            description: "Error message", // desc
+            example: "Not found", // example of an error message
+          },
+          internal_code: {
+            type: "string", // data type
+            description: "Error internal code", // desc
+            example: "Invalid parameters", // example of an error internal code
+          },
+        },
+      },
     },
   },
 };
