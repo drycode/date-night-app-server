@@ -6,6 +6,7 @@ const {
   putDateCard,
   deleteCard,
 } = require("./service");
+const { PATHS } = require("./constants");
 const mongoClient = require("./client");
 const express = require("express");
 var bodyParser = require("body-parser");
@@ -33,17 +34,13 @@ app.get("/users", async (req, res) => {
   res.send(await findUser(dbCursor.collection("user")));
 });
 
-app.get("/:userId/dateCards", async (req, res) => {
+app.get(PATHS.cards, async (req, res) => {
   res.send(
     await findAllCards(req.params.userId, dbCursor.collection("dateNightCards"))
   );
 });
 
-app.get("/:userId/dateCards", async (req, res) => {
-  // res.send(await findAllCards(dbCursor.collection("dateNightCards")));
-});
-
-app.post("/:userId/dateCards/card", jsonParser, async (req, res) => {
+app.post(PATHS.card, jsonParser, async (req, res) => {
   console.log(req.body);
   res.send(
     await putDateCard(

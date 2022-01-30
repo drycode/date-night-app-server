@@ -1,3 +1,4 @@
+const { pathParamId } = require("../components");
 module.exports = {
   get: {
     tags: ["Cards CRUD operations"],
@@ -7,9 +8,7 @@ module.exports = {
       {
         name: "userId",
         in: "path",
-        schema: {
-          $ref: "#/components/schemas/_id",
-        },
+        schema: pathParamId,
         required: true, // Mandatory param
         description: "User unique ID",
       },
