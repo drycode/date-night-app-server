@@ -23,17 +23,17 @@ async function findUser(users) {
   return document;
 }
 
-async function findAllCards(cards) {
-  const documents = await cards.find();
+async function findAllCards(userId, cards) {
+  const documents = await cards.find({ userId });
   return documents.toArray();
 }
 
-async function putDateCard(cards, payload) {
-  return await cards.insertOne(payload);
+async function putDateCard(userId, cards, payload) {
+  return await cards.insertOne({ userId, ...payload });
 }
 
-async function deleteCard(cards, _id) {
-  return await cards.deleteOne({ _id: new mongodb.ObjectId(_id) });
+async function deleteCard(userId, cards, _id) {
+  return await cards.deleteOne({ _id: new mongodb.ObjectId(_id), userId });
 }
 
 module.exports = {

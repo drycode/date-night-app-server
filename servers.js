@@ -33,20 +33,35 @@ app.get("/users", async (req, res) => {
   res.send(await findUser(dbCursor.collection("user")));
 });
 
-app.get("/dateCards", async (req, res) => {
-  res.send(await findAllCards(dbCursor.collection("dateNightCards")));
+app.get("/:userId/dateCards", async (req, res) => {
+  res.send(
+    await findAllCards(req.params.userId, dbCursor.collection("dateNightCards"))
+  );
 });
 
-app.post("/dateCards/card", jsonParser, async (req, res) => {
+app.get("/:userId/dateCards", async (req, res) => {
+  // res.send(await findAllCards(dbCursor.collection("dateNightCards")));
+});
+
+app.post("/:userId/dateCards/card", jsonParser, async (req, res) => {
   console.log(req.body);
-  res.send(await putDateCard(dbCursor.collection("dateNightCards"), req.body));
-  //   res.send("ok");
+  res.send(
+    await putDateCard(
+      req.params.userId,
+      dbCursor.collection("dateNightCards"),
+      req.body
+    )
+  );
 });
 
-app.delete("/dateCards/card/:id", jsonParser, async (req, res) => {
+app.delete("/:userId/dateCards/card/:id", jsonParser, async (req, res) => {
   console.log("Delete: ", req.params);
   res.send(
-    await deleteCard(dbCursor.collection("dateNightCards"), req.params.id)
+    await deleteCard(
+      req.params.userId,
+      dbCursor.collection("dateNightCards"),
+      req.params.id
+    )
   );
 });
 
