@@ -15,7 +15,10 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "mongodb": "^4.2.2",
-    "mongoose": "^6.1.5"
+    "mongoose": "^6.1.5",
+    "compression": "^1.7.4",
+    "helmet": "^5.0.2",
+    "pm2": "^5.1.2"
   },
   "devDependencies": {
     "eslint": "^8.8.0",
