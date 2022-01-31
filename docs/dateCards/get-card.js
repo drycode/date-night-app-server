@@ -1,5 +1,5 @@
 const { pathParamId } = require("../components");
-module.exports = {
+const _ = {
   get: {
     tags: ["Cards CRUD operations"],
     description: "Get all date cards",
@@ -9,7 +9,7 @@ module.exports = {
         name: "userId",
         in: "path",
         schema: pathParamId,
-        required: true, // Mandatory param
+        required: true,
         description: "User unique ID",
       },
     ],

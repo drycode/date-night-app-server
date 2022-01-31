@@ -21,7 +21,6 @@ paths[normalizePath(PATHS.health)] = {
 };
 paths[normalizePath(PATHS.cards)] = {
   ...getCards,
-  ...getCard,
   ...createCard,
 };
 

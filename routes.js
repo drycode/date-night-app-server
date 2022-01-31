@@ -43,7 +43,12 @@ app.get(PATHS.cards, async (req, res) => {
     await findCards(
       req.params.userId,
       dbCursor.collection(CARDS_COLLECTION),
-      req.params
+      req.query.name,
+      req.query.repeating ? req.query.repeating === "true" : null,
+      Number(req.query.budgetInDollars),
+      req.query.timeOfDay,
+      req.query.dayOfWeek,
+      req.query.petFriendly ? req.query.petFriendly === "true" : null
     )
   );
 });

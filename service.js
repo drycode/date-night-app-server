@@ -23,8 +23,37 @@ async function findUser(users) {
   return document;
 }
 
-async function findCards(userId, cards, filter = {}) {
-  const documents = await cards.find({ userId, filter });
+async function findCards(
+  userId,
+  cards,
+  name = null,
+  repeating = false,
+  budgetInDollars = NaN,
+  timeOfDay = null,
+  dayOfWeek = null,
+  petFriendly = false
+) {
+  const filter = { userId };
+  if (name !== null) {
+    filter.name = name;
+  }
+  if (repeating !== null) {
+    filter.repeating = repeating;
+  }
+  if (!isNaN(budgetInDollars)) {
+    filter.budgetInDollars = budgetInDollars;
+  }
+  if (timeOfDay !== null) {
+    filter.timeOfDay = { $all: timeOfDay };
+  }
+  if (dayOfWeek !== null) {
+    filter.dayOfWeek = { $all: dayOfWeek };
+  }
+  if (petFriendly !== null) {
+    filter.petFriendly = petFriendly;
+  }
+  console.log(filter);
+  const documents = await cards.find(filter);
   return documents.toArray();
 }
 

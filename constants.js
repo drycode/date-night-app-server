@@ -1,7 +1,7 @@
 module.exports = {
   PATHS: {
     cards: "/:userId/dateCards",
-    card: "/:userId/dateCards/:id",
+    card: "/:userId/dateCards/:cardId",
     health: "/health",
     swaggerURI: "/api-docs",
     listCollections: "/:database/collections",

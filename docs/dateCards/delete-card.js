@@ -1,3 +1,5 @@
+const { userIdSchema, cardIdSchema } = require("./schemas");
+
 module.exports = {
   delete: {
     tags: ["Cards CRUD operations"],
@@ -7,18 +9,14 @@ module.exports = {
       {
         name: "userId",
         in: "path",
-        schema: {
-          $ref: "#/components/schemas/id",
-        },
+        schema: userIdSchema,
         required: true,
         description: "User id",
       },
       {
-        name: "id",
+        name: "cardId",
         in: "path",
-        schema: {
-          $ref: "#/components/schemas/id",
-        },
+        schema: cardIdSchema,
         required: true,
         description: "Unique date card ID",
       },

@@ -1,49 +1,21 @@
-const SAMPLE_USER_ID = "1";
-const SAMPLE_CARD_ID = "61f5826a43f7ac76d74903aa";
-
-const _id = {
-  type: "object",
-  description: "MongoDB ID Type",
-  example: { $oid: SAMPLE_CARD_ID },
-};
-
-const pathParamId = {
-  type: "string",
-  description: "Unique id which mimics the $oid from Mongo",
-  example: SAMPLE_USER_ID,
-};
+const {
+  nameSchema,
+  repeatingSchema,
+  budgetSchema,
+  timeOfDaySchema,
+  dayOfWeekSchema,
+  petFriendlySchema,
+  cardIdSchema,
+  _id,
+} = require("./dateCards/schemas");
 
 const dateCardPayload = {
-  name: {
-    type: "string",
-    description: "Name of the date",
-    example: "Coffee Date",
-  },
-  repeating: {
-    type: "boolean",
-    description: "Whether or not the date can be repeated",
-    example: true,
-  },
-  budgetInDollars: {
-    type: "number",
-    description: "Total amount to spend on the date",
-    example: 100.0,
-  },
-  timeOfDay: {
-    type: "array",
-    description: "What time of day",
-    example: ["Morning", "Afternoon", "Night"],
-  },
-  dayOfWeek: {
-    type: "array",
-    description: "What days of week",
-    example: ["Monday", "Tuesday", "Saturday"],
-  },
-  petFriendly: {
-    type: "boolean",
-    description: "Can we bring our dog? ",
-    example: true,
-  },
+  name: nameSchema,
+  repeating: repeatingSchema,
+  budgetInDollars: budgetSchema,
+  timeOfDay: timeOfDaySchema,
+  dayOfWeek: dayOfWeekSchema,
+  petFriendly: petFriendlySchema,
 };
 
 const deletedResponse = {
@@ -63,8 +35,6 @@ const deletedResponse = {
 };
 
 module.exports = {
-  pathParamId,
-
   components: {
     schemas: {
       _id: _id,

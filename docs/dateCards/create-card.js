@@ -25,7 +25,7 @@ module.exports = {
 
     responses: {
       200: {
-        description: "Card has been deleted",
+        description: "Card has been created",
         content: {
           "application/json": {
             schema: {
