@@ -5,7 +5,6 @@ const {
   timeOfDaySchema,
   dayOfWeekSchema,
   petFriendlySchema,
-  cardIdSchema,
   _id,
 } = require("./dateCards/schemas");
 
@@ -36,6 +35,13 @@ const deletedResponse = {
 
 module.exports = {
   components: {
+    securitySchemes: {
+      bearerToken: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
     schemas: {
       _id: _id,
       // todo model

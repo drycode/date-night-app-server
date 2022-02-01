@@ -7,8 +7,9 @@ module.exports = {
     listCollections: "/:database/collections",
     listUsers: "/users",
     listDatabases: "/databases",
+    apiBase: "/api/v1",
   },
   DATABASE_NAME: "primaryDateNightDb",
   CARDS_COLLECTION: "dateNightCards",
-  USERS_COLLECTION: "user",
+  USERS_COLLECTION: "users",
 };

@@ -1,8 +1,8 @@
 module.exports = {
   servers: [
     {
-      url: "http://localhost:3000/",
-      description: "Local server", // name
+      url: "http://localhost:3000/api/v1",
+      description: "Local server",
     },
   ],
 };
