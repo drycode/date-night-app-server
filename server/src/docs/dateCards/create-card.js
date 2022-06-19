@@ -1,4 +1,4 @@
-const { pathParamId } = require("../components");
+const { userIdSchema } = require("./schemas");
 module.exports = {
   post: {
     tags: ["Cards CRUD operations"],
@@ -8,7 +8,7 @@ module.exports = {
       {
         name: "userId",
         in: "path",
-        schema: pathParamId,
+        schema: userIdSchema,
         required: true,
         description: "User unique ID",
       },
@@ -17,7 +17,7 @@ module.exports = {
       content: {
         "application/json": {
           schema: {
-            $ref: "#components/schemas/DateCardPayload",
+            $ref: "#/components/schemas/DateCardPayload",
           },
         },
       },

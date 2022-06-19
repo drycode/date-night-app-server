@@ -8,7 +8,8 @@ const { findCards, putDateCard, deleteCard } = require("../service");
 
 const dbCursor = mongoClient.db(DATABASE_NAME);
 
-router.get(PATHS.health, middleware.verify, (req, res) => {
+router.use(middleware.verify);
+router.get(PATHS.health, (req, res) => {
   res.send("Hello World!");
 });
 

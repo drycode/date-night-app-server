@@ -22,7 +22,7 @@ const deletedResponse = {
   properties: {
     acknowledged: {
       type: "boolean",
-      description: "Whether the db recieved and responded to the request",
+      description: "Whether the db received and responded to the request",
       example: true,
     },
     deletedCount: {

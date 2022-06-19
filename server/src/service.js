@@ -5,10 +5,6 @@ async function listDatabases(client) {
     .db()
     .admin()
     .listDatabases();
-  console.log("Databases:");
-  databasesList.databases.forEach((db) => {
-    console.log(` -- ${db.name}`);
-  });
   return databasesList.databases;
 }
 
@@ -19,7 +15,6 @@ async function listCollections(client, database) {
 
 async function findUser(users) {
   const document = await users.findOne();
-  console.log(document);
   return document;
 }
 
@@ -52,7 +47,6 @@ async function findCards(
   if (petFriendly !== null) {
     filter.petFriendly = petFriendly;
   }
-  console.log(filter);
   const documents = await cards.find(filter);
   return documents.toArray();
 }

@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD [ "pm2-runtime", "date-a-base.js" ]
+CMD [ "pm2-runtime", "src/date-a-base.js" ]
