@@ -4,7 +4,12 @@ const router = express.Router();
 
 const mongoClient = require("../clients/mongo_client");
 const middleware = require("../middlewares");
-const { findCards, putDateCard, deleteCard } = require("../service");
+const {
+  findCards,
+  putDateCard: createDateCard,
+  deleteCard,
+  updateDateCard,
+} = require("../service");
 
 const dbCursor = mongoClient.db(DATABASE_NAME);
 
@@ -15,27 +20,12 @@ router.get(PATHS.health, (req, res) => {
 
 router.get(PATHS.cards, async (req, res) => {
   res.send(
-    await findCards(
-      req.params.userId,
-      dbCursor.collection(CARDS_COLLECTION),
-      req.query.name,
-      req.query.repeating ? req.query.repeating === "true" : null,
-      Number(req.query.budgetInDollars),
-      req.query.timeOfDay,
-      req.query.dayOfWeek,
-      req.query.petFriendly ? req.query.petFriendly === "true" : null
-    )
+    await findCards(req.params.userId, dbCursor.collection(CARDS_COLLECTION))
   );
 });
 
 router.post(PATHS.cards, async (req, res) => {
-  res.send(
-    await putDateCard(
-      req.params.userId,
-      dbCursor.collection(CARDS_COLLECTION),
-      req.body
-    )
-  );
+  res.send(await createDateCard(req.params.userId, req.body));
 });
 
 router.delete(PATHS.card, async (req, res) => {
@@ -43,9 +33,23 @@ router.delete(PATHS.card, async (req, res) => {
     await deleteCard(
       req.params.userId,
       dbCursor.collection(CARDS_COLLECTION),
-      req.params.id
+      req.params.cardId
     )
   );
+});
+
+router.put(PATHS.card, async (req, res) => {
+  try {
+    const result = await updateDateCard(
+      req.params.userId,
+      req.params.cardId,
+      req.body
+    );
+    res.send(result);
+  } catch (e) {
+    res.status = 400;
+    res.send(e);
+  }
 });
 
 module.exports = router;

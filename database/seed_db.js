@@ -1,11 +1,13 @@
 const dotenv = require("dotenv");
+const bcrypt = require("bcrypt");
 dotenv.config({
   path: "./server/.env.development",
 });
 const User = require("../server/src/models/user.js");
 const dateCard = require("../server/src/models/dateCard.js");
+const { makeUser, makeDateCard } = require("../server/src/models/builders");
 
-const { dbURI } = require("../server/src/constants");
+const { dbURI, encryptionRounds } = require("../server/src/constants");
 const mongoose = require("mongoose");
 
 const { randomInt } = require("crypto");
@@ -59,41 +61,49 @@ const dates = [
 
 let id = 1;
 
-const newUser = User({
-  email: "johnsmith@hotmail.com",
-  password: "12345",
+bcrypt.hash("12345", encryptionRounds, (error, hash) => {
+  if (error) {
+    console.log("Unable to create hashed password");
+    console.log(error);
+  }
+  console.log(hash);
+  const newUser = makeUser({
+    email: "johnsmith@hotmail.com",
+    hashedPassword: hash,
+  });
+
+  newUser
+    .save()
+    .then((res) => {
+      console.log(res);
+
+      forEach(dates, (date) => {
+        let card = {
+          id: id,
+          public: id % 7 ? false : true,
+          owner: newUser._id,
+          createdBy: newUser._id,
+          name: "take hazel to the dog park",
+          details: "and get a pup cup on the way home",
+          location: "rockwood park",
+          gMapReference: "https://goo.gl/maps/BWzsQH1JKpfu9C9C9",
+          repeatable: id % 5 ? false : true,
+          timeOfDay: ["morning", "afternoon", "evening"],
+          overnight: (id + 1) % 7 ? false : true,
+          weekend: (id + 3) % 3 ? false : true,
+          weekday: id % 2 ? false : true,
+          estimatedCost: randomInt(0, 4),
+          petFriendly: (id + 1) % 7 ? true : false,
+          expires: (id + 3) % 7 ? new Date(2023, 1, 1, 1, 1, 1, 1) : null,
+        };
+        card = { ...card, ...date };
+        console.log(card);
+        makeDateCard(card)
+          .save()
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
+        id += 1;
+      });
+    })
+    .catch((err) => console.error(err));
 });
-
-newUser
-  .save()
-  .then((res) => {
-    console.log(res);
-
-    forEach(dates, (date) => {
-      let card = {
-        id: id,
-        public: id % 7 ? false : true,
-        owner: newUser._id,
-        createdBy: newUser._id,
-        name: "take hazel to the dog park",
-        details: "and get a pup cup on the way home",
-        location: "rockwood park",
-        gMapReference: "https://goo.gl/maps/BWzsQH1JKpfu9C9C9",
-        repeatable: id % 5 ? false : true,
-        timeOfDay: ["morning", "afternoon", "evening"],
-        overnight: (id + 1) % 7 ? false : true,
-        weekend: (id + 3) % 3 ? false : true,
-        weekday: id % 2 ? false : true,
-        estimatedCost: randomInt(0, 4),
-        petFriendly: (id + 1) % 7 ? true : false,
-        expires: (id + 3) % 7 ? new Date(2023, 1, 1, 1, 1, 1, 1) : null,
-      };
-      card = { ...card, ...date };
-      dateCard(card)
-        .save()
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
-      id += 1;
-    });
-  })
-  .catch((err) => console.error(err));

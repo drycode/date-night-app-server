@@ -1,11 +1,10 @@
-const { Timestamp } = require("mongodb");
 const mongoose = require("mongoose");
+const { dateCard, user } = require("../constants");
 
 const model = mongoose.Schema({
-  id: { type: String, required: true },
   public: { type: Boolean, required: true, default: false },
-  owner: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
-  createdBy: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
+  owner: { type: mongoose.Schema.ObjectId, ref: user, required: true },
+  createdBy: { type: mongoose.Schema.ObjectId, ref: user, required: true },
   name: { type: String, required: true },
   details: { type: String, required: false },
   location: { type: String, required: false },
@@ -17,13 +16,13 @@ const model = mongoose.Schema({
     default: ["morning", "afternoon", "evening"],
   },
   overnight: { type: Boolean, required: true, default: false },
-  weekend: { type: Boolean, required: true, default: false },
-  weekday: { type: Boolean, required: true, default: false },
-  estimatedCost: 0,
+  weekend: { type: Boolean, required: true, default: true },
+  weekday: { type: Boolean, required: true, default: true },
+  estimatedCost: { type: Number, required: true, default: 0 },
   petFriendly: { type: Boolean, required: true, default: false },
   expires: { type: Date, required: false, default: null },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
 
-module.exports = new mongoose.model("DateCard", model);
+module.exports = new mongoose.model(dateCard, model);

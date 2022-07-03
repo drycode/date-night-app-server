@@ -16,9 +16,12 @@ services:
       MONGO_INITDB_ROOT_USERNAME: testuser
       MONGO_INITDB_ROOT_PASSWORD: examplepasswordnotforproduction
       MONGO_INITDB_DATABASE: primaryDateNightDb
+      MONGO_DATA_DIR: /data/db
       MONGO_BASE_URL: localhost:27017
     volumes:
       - ./init-db.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./tmp/data/db:/data/db
+
     ports: 
       - 27017:27017
     expose:

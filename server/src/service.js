@@ -1,4 +1,7 @@
 const mongodb = require("mongodb");
+const { dateCard } = require("./constants");
+const DC = require("./models/dateCard");
+const { makeDateCard } = require("./models/builders");
 
 async function listDatabases(client) {
   const databasesList = await client
@@ -18,45 +21,45 @@ async function findUser(users) {
   return document;
 }
 
-async function findCards(
-  userId,
-  cards,
-  name = null,
-  repeating = false,
-  budgetInDollars = NaN,
-  timeOfDay = null,
-  dayOfWeek = null,
-  petFriendly = false
-) {
-  const filter = { userId };
-  if (name !== null) {
-    filter.name = name;
-  }
-  if (repeating !== null) {
-    filter.repeating = repeating;
-  }
-  if (!isNaN(budgetInDollars)) {
-    filter.budgetInDollars = budgetInDollars;
-  }
-  if (timeOfDay !== null) {
-    filter.timeOfDay = { $all: timeOfDay };
-  }
-  if (dayOfWeek !== null) {
-    filter.dayOfWeek = { $all: dayOfWeek };
-  }
-  if (petFriendly !== null) {
-    filter.petFriendly = petFriendly;
-  }
-  const documents = await cards.find(filter);
+async function findCards(owner, cardsCollectionCursor) {
+  console.log(owner);
+  const filter = { owner: mongodb.ObjectId(owner) };
+  const documents = await cardsCollectionCursor.find(filter);
   return documents.toArray();
 }
 
-async function putDateCard(userId, cards, payload) {
-  return await cards.insertOne({ userId, ...payload });
+async function putDateCard(userId, payload) {
+  const newCard = makeDateCard({
+    owner: userId,
+    createdBy: userId,
+    ...payload,
+  });
+  const res = await newCard.save();
+  return res;
 }
 
-async function deleteCard(userId, cards, _id) {
-  return await cards.deleteOne({ _id: new mongodb.ObjectId(_id), userId });
+async function deleteCard(userId, cards, cardId) {
+  const _id = mongodb.ObjectId(cardId);
+  userId = mongodb.ObjectId(userId);
+  const existingCard = await cards.findOne({ _id });
+
+  if (!existingCard) return `Card with id: ${_id.toJSON()} could not be found`;
+  if (existingCard.owner.toJSON() !== userId.toJSON())
+    return "Could not delete card, as ownerId does not match userId";
+  return await cards.deleteOne({ _id, owner: userId });
+}
+
+async function updateDateCard(userId, cardId, payload) {
+  let result = null;
+
+  result = await DC.findByIdAndUpdate(mongodb.ObjectId(cardId), payload, {
+    new: true,
+  });
+  if (!result) {
+    throw `Card with id: ${cardId} could not be found`;
+  }
+
+  return result;
 }
 
 module.exports = {
@@ -66,4 +69,5 @@ module.exports = {
   findCards,
   putDateCard,
   deleteCard,
+  updateDateCard,
 };
