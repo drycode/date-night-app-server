@@ -7,7 +7,7 @@ const info = {
     contact: {
       name: "Daniel Young",
       email: "daniel.richard.young@gmail.com",
-      url: "http://localhost:3000",
+      // url: "http://localhost:3000",
     },
   },
 };

@@ -12,3 +12,18 @@ exports.verify = (req, res, next) => {
     });
   }
 };
+
+exports.isAuthenticated = (req, res, next) => {
+  if (!req.cookies) {
+    throw "The request didn't have any cookies";
+  } else if (!req.cookies.activeUser || !req.cookies.accessToken) {
+    throw "Missing activeUser or accessToken in cookies";
+  } else if (
+    false // TODO: access token is not valid
+  ) {
+    // Access token expired
+    // Decoded Access token mismatched with active user
+    res.status(403).send("Not authorized to view the requested resource");
+  }
+  next();
+};

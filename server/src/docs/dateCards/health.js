@@ -1,5 +1,3 @@
-const { pathParamId } = require("../components");
-
 module.exports = {
   get: {
     tags: ["Health Check"],

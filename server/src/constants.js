@@ -14,14 +14,15 @@ const user = "user";
 module.exports = {
   dbURI,
   PATHS: {
-    cards: "/:userId/dates",
-    card: "/:userId/dates/:cardId",
+    cards: "/dates",
+    card: "/dates/:cardId",
     health: "/health",
     swaggerURI: "/api-docs",
     listCollections: "/:database/collections",
     listUsers: "/users",
     listDatabases: "/databases",
     apiBase: "/api/v1",
+    auth: "/auth",
   },
   DATABASE_NAME: "primaryDateNightDb",
   CARDS_COLLECTION: `${dateCard}s`,

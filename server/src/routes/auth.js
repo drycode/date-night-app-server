@@ -10,20 +10,34 @@ const jwt = require("jsonwebtoken");
 
 const middleware = require("../middlewares");
 
+const logUserIn = (req, res, user) => {
+  bcrypt.compare(req.body.password, user.password, (error, match) => {
+    if (error) res.status(500).json(error);
+    else if (match) {
+      const token = generateToken(user);
+      console.log(req.cookies);
+      console.log(req.headers);
+      res
+        .status(200)
+        .cookie("activeUser", encodeURIComponent(user._id), {
+          Secure: false,
+          SameSite: "None",
+          encode: String,
+        })
+        .cookie("accessToken", token, { httpOnly: true })
+
+        .json({ token: token, userId: user._id });
+    } else res.status(403).json({ error: "passwords do not match" });
+  });
+};
+
 router.get("/login", (req, res) => {
-  User.findOne({ email: req.body.email })
+  User.findOne({ email: req.body.username })
     .then((user) => {
       if (!user)
         res.status(404).json({ error: "no user with that email found" });
       else {
-        bcrypt.compare(req.body.password, user.password, (error, match) => {
-          if (error) res.status(500).json(error);
-          else if (match)
-            res
-              .status(200)
-              .json({ token: generateToken(user), userId: user._id });
-          else res.status(403).json({ error: "passwords do not match" });
-        });
+        logUserIn(req, res, user);
       }
     })
     .catch((error) => {
@@ -32,10 +46,10 @@ router.get("/login", (req, res) => {
     });
 });
 
-router.post("/signup", (req, res) => {
-  User.findOne({ email: req.body.email }).then((user) => {
+router.post("/login", (req, res) => {
+  User.findOne({ email: req.body.username }).then((user) => {
     if (user) {
-      res.send(`User: ${user.email} already exists...`);
+      logUserIn(req, res, user);
     } else {
       console.log(encryptionRounds);
       bcrypt.hash(req.body.password, encryptionRounds, (error, hash) => {
@@ -44,13 +58,13 @@ router.post("/signup", (req, res) => {
           res.status(500).json(error);
         } else {
           const newUser = makeUser({
-            email: req.body.email,
+            email: req.body.username,
             hashedPassword: hash,
           });
           newUser
             .save()
             .then((user) => {
-              res.status(200).json({ token: generateToken(user) });
+              res.status(201).json({ user, token: generateToken(user) });
             })
             .catch((error) => {
               console.debug(error);

@@ -2,10 +2,10 @@ const {
   nameSchema,
   userIdSchema,
   repeatingSchema,
-  budgetSchema,
   timeOfDaySchema,
   dayOfWeekSchema,
   petFriendlySchema,
+  costSchema,
 } = require("./schemas");
 module.exports = {
   get: {
@@ -35,10 +35,10 @@ module.exports = {
         required: false,
       },
       {
-        name: "budgetInDollars",
+        name: "estimatedCost",
         in: "query",
-        schema: budgetSchema,
-        description: budgetSchema.description,
+        schema: costSchema,
+        description: costSchema.description,
         required: false,
       },
       {
