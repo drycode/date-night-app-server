@@ -16,26 +16,46 @@ const dbCursor = mongoClient.db(DATABASE_NAME);
 router.use(PATHS.cards, middleware.isAuthenticated);
 
 router.get(PATHS.cards, async (req, res) => {
-  res.send(
-    await findCards(
+  try {
+    const result = await findCards(
       req.cookies.activeUser,
       dbCursor.collection(CARDS_COLLECTION)
-    )
-  );
+    );
+    res.send(result);
+  } catch (e) {
+    res.status(500);
+    res.send(e);
+  }
 });
 
 router.post(PATHS.cards, async (req, res) => {
-  res.send(await createDateCard(req.cookies.activeUser, req.body));
+  try {
+    const result = await createDateCard(req.cookies.activeUser, req.body);
+    res.send(result);
+  } catch (e) {
+    if (e.name === "ValidationError") {
+      console.log(e);
+      res.status(400);
+      res.send(e._message);
+    } else {
+      res.status = 500;
+      res.send(e._message);
+    }
+  }
 });
 
 router.delete(PATHS.card, async (req, res) => {
-  res.send(
-    await deleteCard(
+  try {
+    const result = await deleteCard(
       req.cookies.activeUser,
       dbCursor.collection(CARDS_COLLECTION),
       req.params.cardId
-    )
-  );
+    );
+    res.send(result);
+  } catch (e) {
+    res.status = 500;
+    res.send(e);
+  }
 });
 
 router.put(PATHS.card, async (req, res) => {

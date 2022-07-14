@@ -34,6 +34,7 @@ async function putDateCard(userId, payload) {
     createdBy: userId,
     ...payload,
   });
+
   const res = await newCard.save();
   return res;
 }

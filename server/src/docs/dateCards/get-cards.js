@@ -1,67 +1,54 @@
-const {
-  nameSchema,
-  userIdSchema,
-  repeatingSchema,
-  timeOfDaySchema,
-  dayOfWeekSchema,
-  petFriendlySchema,
-  costSchema,
-} = require("./schemas");
+const { dateCardPayload, errorSchema } = require("./schemas");
+
 module.exports = {
   get: {
     tags: ["Cards CRUD operations"], // operation's tag.
-    description: "Get all date cards", // operation's desc.
+    description:
+      "Get all date cards -- Relies on Cookie Stored in Browser from Login", // operation's desc.
     operationId: "getCards", // unique operation id
     parameters: [
-      {
-        name: "userId",
-        in: "path",
-        schema: userIdSchema,
-        required: true,
-        description: "User unique ID",
-      },
-      {
-        name: "name",
-        in: "query",
-        schema: nameSchema,
-        required: false,
-        description: "Name of the Date Card",
-      },
-      {
-        name: "repeating",
-        in: "query",
-        schema: repeatingSchema,
-        description: repeatingSchema.description,
-        required: false,
-      },
-      {
-        name: "estimatedCost",
-        in: "query",
-        schema: costSchema,
-        description: costSchema.description,
-        required: false,
-      },
-      {
-        name: "timeOfDay",
-        in: "query",
-        schema: timeOfDaySchema,
-        description: timeOfDaySchema.description,
-        required: false,
-      },
-      {
-        name: "dayOfWeek",
-        in: "query",
-        schema: dayOfWeekSchema,
-        description: dayOfWeekSchema.description,
-        required: false,
-      },
-      {
-        name: "petFriendly",
-        in: "query",
-        schema: petFriendlySchema,
-        description: petFriendlySchema.description,
-        required: false,
-      },
+      // {
+      //   name: "name",
+      //   in: "query",
+      //   schema: nameSchema,
+      //   required: false,
+      //   description: "Name of the Date Card",
+      // },
+      // {
+      //   name: "repeating",
+      //   in: "query",
+      //   schema: repeatingSchema,
+      //   description: repeatingSchema.description,
+      //   required: false,
+      // },
+      // {
+      //   name: "estimatedCost",
+      //   in: "query",
+      //   schema: costSchema,
+      //   description: costSchema.description,
+      //   required: false,
+      // },
+      // {
+      //   name: "timeOfDay",
+      //   in: "query",
+      //   schema: timeOfDaySchema,
+      //   description: timeOfDaySchema.description,
+      //   required: false,
+      // },
+      // {
+      //   name: "dayOfWeek",
+      //   in: "query",
+      //   schema: dayOfWeekSchema,
+      //   description: dayOfWeekSchema.description,
+      //   required: false,
+      // },
+      // {
+      //   name: "petFriendly",
+      //   in: "query",
+      //   schema: petFriendlySchema,
+      //   description: petFriendlySchema.description,
+      //   required: false,
+      // },
     ],
     responses: {
       200: {
@@ -69,7 +56,8 @@ module.exports = {
         content: {
           "application/json": {
             schema: {
-              $ref: "#/components/schemas/DateCard",
+              type: "array",
+              items: dateCardPayload,
             },
           },
         },
@@ -79,9 +67,7 @@ module.exports = {
         content: {
           // content-type
           "application/json": {
-            schema: {
-              $ref: "#/components/schemas/Error", // error data model
-            },
+            schema: errorSchema,
           },
         },
       },

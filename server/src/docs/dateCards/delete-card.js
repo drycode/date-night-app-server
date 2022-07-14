@@ -1,4 +1,4 @@
-const { userIdSchema, cardIdSchema } = require("./schemas");
+const { cardIdSchema, deleteCardResponse } = require("./schemas");
 
 module.exports = {
   delete: {
@@ -6,13 +6,6 @@ module.exports = {
     description: "Delete card with specified ID",
     operationId: "deleteCard",
     parameters: [
-      {
-        name: "userId",
-        in: "path",
-        schema: userIdSchema,
-        required: true,
-        description: "User id",
-      },
       {
         name: "cardId",
         in: "path",
@@ -27,9 +20,7 @@ module.exports = {
         description: "Card has been deleted",
         content: {
           "application/json": {
-            schema: {
-              $ref: "#/components/schemas/DeletedResponse",
-            },
+            schema: deleteCardResponse,
           },
         },
       },
