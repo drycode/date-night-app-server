@@ -1,0 +1,35 @@
+{
+  "name": "mongodb",
+  "version": "1.0.0",
+  "description": "No need",
+  "main": "date-a-base.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --ignore swagger.json --inspect src/date-a-base.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.25.0",
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.1",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "helmet": "^5.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.2.2",
+    "mongoose": "^6.1.5",
+    "morgan": "^1.10.0",
+    "pm2": "^5.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.8.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^1.9.1",
+    "prettier-eslint": "^8.2.2",
+    "swagger-ui-express": "^4.3.0"
+  }
+}
