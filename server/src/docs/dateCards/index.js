@@ -4,16 +4,7 @@ const getCards = require("./get-cards");
 const updateCard = require("./update-card");
 const { PATHS } = require("../../constants");
 const health = require("./health");
-
-let normalizePath = (key) => {
-  let array = key.split("/");
-  array.forEach((item, i) => {
-    if (item[0] == ":") {
-      array[i] = `{${item.slice(1, item.length)}}`;
-    }
-  });
-  return array.join("/");
-};
+const { normalizePath } = require("../../helpers");
 
 const paths = {};
 paths[normalizePath(PATHS.health)] = {

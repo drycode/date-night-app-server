@@ -5,51 +5,64 @@ const { makeUser } = require("../models/builders");
 const User = require("../models/user");
 const { encryptionRounds } = require("../constants");
 const tokenSecret = process.env.TOKEN_SECRET;
+const { PATHS } = require("../constants");
 
 const jwt = require("jsonwebtoken");
 
 const middleware = require("../middlewares");
+const { verify } = require("../helpers");
 
-const logUserIn = (req, res, user) => {
-  bcrypt.compare(req.body.password, user.password, (error, match) => {
-    if (error) res.status(500).json(error);
-    else if (match) {
+const ACTIVE_USER = "activeUser";
+const ACCESS_TOKEN = "accessToken";
+
+const logUserIn = (req, res, user, submittedPassword) => {
+  bcrypt.compare(submittedPassword, user.password, (error, match) => {
+    if (error) {
+      clearCookies(res);
+      console.log(error);
+      res.status(500).json(error._message);
+    } else if (match) {
       const token = generateToken(user);
-      console.log(req.cookies);
-      console.log(req.headers);
+
       res
         .status(200)
-        .cookie("activeUser", encodeURIComponent(user._id), {
+        .cookie(ACTIVE_USER, encodeURIComponent(user._id), {
           Secure: false,
           SameSite: "None",
           encode: String,
         })
-        .cookie("accessToken", token, { httpOnly: true })
+        .cookie(ACCESS_TOKEN, token, { httpOnly: true })
 
         .json({ token: token, userId: user._id });
     } else res.status(403).json({ error: "passwords do not match" });
   });
 };
 
-router.get("/login", (req, res) => {
-  User.findOne({ email: req.body.username })
+const clearCookies = (res) => {
+  res.clearCookie(ACTIVE_USER);
+  res.clearCookie(ACCESS_TOKEN);
+};
+
+router.get(PATHS.login, (req, res) => {
+  clearCookies(res);
+  User.findOne({ email: req.query.username })
     .then((user) => {
-      if (!user)
+      if (!user) {
         res.status(404).json({ error: "no user with that email found" });
-      else {
-        logUserIn(req, res, user);
+      } else {
+        logUserIn(req, res, user, req.query.password);
       }
     })
     .catch((error) => {
       console.debug(error);
-      res.status(500).json(error);
+      res.status(500).json(error._message);
     });
 });
 
-router.post("/login", (req, res) => {
+router.post(PATHS.login, (req, res) => {
   User.findOne({ email: req.body.username }).then((user) => {
     if (user) {
-      logUserIn(req, res, user);
+      logUserIn(req, res, user, req.body.password);
     } else {
       console.log(encryptionRounds);
       bcrypt.hash(req.body.password, encryptionRounds, (error, hash) => {
@@ -76,8 +89,20 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.get("/jwt-test", middleware.verify, (req, res) => {
-  res.status(200).json(req.user);
+router.post(PATHS.jwtTest, (req, res) => {
+  console.log(req.body);
+  try {
+    const decryptedToken = { value: null };
+    verify(
+      req.body.activeUser,
+      req.body.accessToken.split(" ")[1],
+      decryptedToken
+    );
+    res.status(200).json(decryptedToken);
+  } catch (e) {
+    console.log(e);
+    res.status(403).json({ error: e });
+  }
 });
 
 function generateToken(user) {

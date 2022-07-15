@@ -23,6 +23,8 @@ module.exports = {
     listDatabases: "/databases",
     apiBase: "/api/v1",
     auth: "/auth",
+    login: "/login",
+    jwtTest: "/jwt-test",
   },
   DATABASE_NAME: "primaryDateNightDb",
   CARDS_COLLECTION: `${dateCard}s`,

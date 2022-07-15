@@ -16,7 +16,6 @@ module.exports = {
       },
     },
     schemas: {
-      // todo model
       DateCard: {
         type: "object",
         properties: {

@@ -1,4 +1,4 @@
-const SAMPLE_USER_ID = "1";
+const SAMPLE_USER_ID = "62cf2a972dc8a049327efa2c";
 const SAMPLE_CARD_ID = "61f5826a43f7ac76d74903aa";
 
 const publicSchema = {
@@ -130,7 +130,6 @@ const dateCardPayload = {
   location: locationSchema,
   isRepeatable: repeatingSchema,
   timeOfDay: timeOfDaySchema,
-  dayOfWeek: dayOfWeekSchema,
   petFriendly: petFriendlySchema,
   expirationDate: datetimeSchema,
 };
@@ -163,4 +162,5 @@ module.exports = {
   postBodyRequestPayload,
   dateCardPayload,
   errorSchema,
+  userIdSchema,
 };
