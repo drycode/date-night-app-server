@@ -27,11 +27,11 @@ services:
     expose:
       - 27017
 
-  # mongo-seed:
-  #   build: 
-  #       dockerfile: ./database/Dockerfile
-  #       context: ./
-  #   depends_on:
-  #     - mongodb
-  #   links: 
-  #     - mongodb
+  mongo-seed:
+    build: 
+        dockerfile: ./database/Dockerfile
+        context: ./
+    depends_on:
+      - mongodb
+    links: 
+      - mongodb

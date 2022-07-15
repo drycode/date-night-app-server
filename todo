@@ -1,0 +1,2 @@
+Need a Logout Route
+Login should overwrite the existing cookies on success, wipe on failure
