@@ -4,3 +4,4 @@
 *.vscode
 swagger.json
 tmp
+deploy.sh
