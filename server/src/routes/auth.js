@@ -1,45 +1,43 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const bcrypt = require("bcrypt");
-const { makeUser } = require("../models/builders");
-const User = require("../models/user");
-const { encryptionRounds } = require("../constants");
+const bcrypt = require('bcrypt');
+const { makeUser } = require('../models/builders');
+const User = require('../models/user');
+const { encryptionRounds } = require('../constants');
 const tokenSecret = process.env.TOKEN_SECRET;
-const { PATHS } = require("../constants");
-
-const jwt = require("jsonwebtoken");
-
+const { PATHS } = require('../constants');
+const jwt = require('jsonwebtoken');
 const { verify } = require("../helpers");
 
-const ACTIVE_USER = "activeUser";
-const ACCESS_TOKEN = "accessToken";
+const ACTIVE_USER = 'activeUser';
+const ACCESS_TOKEN = 'accessToken';
 
 const logUserIn = (req, res, user, submittedPassword) => {
-  bcrypt.compare(submittedPassword, user.password, (error, match) => {
-    if (error) {
-      clearCookies(res);
-      console.log(error);
-      res.status(500).json(error._message);
-    } else if (match) {
-      const token = generateToken(user);
+	bcrypt.compare(submittedPassword, user.password, (error, match) => {
+		if (error) {
+			clearCookies(res);
+			console.log(error);
+			res.status(500).json(error._message);
+		} else if (match) {
+			const token = generateToken(user);
 
-      res
-        .status(200)
-        .cookie(ACTIVE_USER, encodeURIComponent(user._id), {
-          Secure: false,
-          SameSite: "None",
-          encode: String,
-        })
-        .cookie(ACCESS_TOKEN, token, { httpOnly: true })
+			res
+				.status(200)
+				.cookie(ACTIVE_USER, encodeURIComponent(user._id), {
+					Secure: false,
+					SameSite: 'None',
+					encode: String,
+				})
+				.cookie(ACCESS_TOKEN, token, { httpOnly: true })
 
-        .json({ token: token, userId: user._id });
-    } else res.status(403).json({ error: "passwords do not match" });
-  });
+				.json({ token: token, userId: user._id });
+		} else res.status(403).json({ error: 'passwords do not match' });
+	});
 };
 
 const clearCookies = (res) => {
-  res.clearCookie(ACTIVE_USER);
-  res.clearCookie(ACCESS_TOKEN);
+	res.clearCookie(ACTIVE_USER);
+	res.clearCookie(ACCESS_TOKEN);
 };
 
 router.post(PATHS.logout, (_, res) => {
@@ -50,75 +48,68 @@ router.post(PATHS.logout, (_, res) => {
 });
 
 router.get(PATHS.login, (req, res) => {
-  clearCookies(res);
-  User.findOne({ email: req.query.username })
-    .then((user) => {
-      if (!user) {
-        res.status(404).json({ error: "no user with that email found" });
-      } else {
-        logUserIn(req, res, user, req.query.password);
-      }
-    })
-    .catch((error) => {
-      console.debug(error);
-      res.status(500).json(error._message);
-    });
+	clearCookies(res);
+	User.findOne({ email: req.query.username })
+		.then((user) => {
+			if (!user) {
+				res.statusMessage = `No user named ${req.query.username} found in Database`;
+				res.status(400).end();
+			} else {
+				logUserIn(req, res, user, req.query.password);
+			}
+		})
+		.catch((error) => {
+			console.debug(error);
+			res.status(500).json(error._message);
+		});
 });
 
 router.post(PATHS.login, (req, res) => {
-  User.findOne({ email: req.body.username }).then((user) => {
-    if (user) {
-      logUserIn(req, res, user, req.body.password);
-    } else {
-      console.log(encryptionRounds);
-      bcrypt.hash(req.body.password, encryptionRounds, (error, hash) => {
-        if (error) {
-          console.debug(error);
-          res.status(500).json(error);
-        } else {
-          const newUser = makeUser({
-            email: req.body.username,
-            hashedPassword: hash,
-          });
-          newUser
-            .save()
-            .then((user) => {
-              res.status(201).json({ user, token: generateToken(user) });
-            })
-            .catch((error) => {
-              console.debug(error);
-              res.status(500).json(error);
-            });
-        }
-      });
-    }
-  });
+	User.findOne({ email: req.body.username }).then((user) => {
+		if (user) {
+			logUserIn(req, res, user, req.body.password);
+		} else {
+			console.log(encryptionRounds);
+			bcrypt.hash(req.body.password, encryptionRounds, (error, hash) => {
+				if (error) {
+					console.debug(error);
+					res.status(500).json(error);
+				} else {
+					const newUser = makeUser({
+						email: req.body.username,
+						hashedPassword: hash,
+					});
+					newUser
+						.save()
+						.then((user) => {
+							res.status(201).json({ user, token: generateToken(user) });
+						})
+						.catch((error) => {
+							console.debug(error);
+							res.status(500).json(error);
+						});
+				}
+			});
+		}
+	});
 });
 
 router.post(PATHS.jwtTest, (req, res) => {
-  console.log(req.body);
-  try {
-    const decryptedToken = { value: null };
-    verify(
-      req.body.activeUser,
-      req.body.accessToken.split(" ")[1],
-      decryptedToken
-    );
-    res.status(200).json(decryptedToken);
-  } catch (e) {
-    console.log(e);
-    res.status(403).json({ error: e });
-  }
+	console.log(req.body);
+	try {
+		const decryptedToken = { value: null };
+		verify(req.body.activeUser, req.body.accessToken.split(' ')[1], decryptedToken);
+		res.status(200).json(decryptedToken);
+	} catch (e) {
+		console.log(e);
+		res.status(403).json({ error: e });
+	}
 });
 
 function generateToken(user) {
-  return jwt.sign(
-    { data: { id: user._id, email: user.email }, iss: "date-a-base" },
-    tokenSecret,
-    {
-      expiresIn: "24h",
-    }
-  );
+	return jwt.sign({ data: { id: user._id, email: user.email }, iss: 'date-a-base' }, tokenSecret, {
+		expiresIn: '24h',
+	});
 }
 
 module.exports = router;
