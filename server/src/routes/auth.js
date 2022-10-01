@@ -9,7 +9,6 @@ const { PATHS } = require("../constants");
 
 const jwt = require("jsonwebtoken");
 
-const middleware = require("../middlewares");
 const { verify } = require("../helpers");
 
 const ACTIVE_USER = "activeUser";
@@ -42,6 +41,13 @@ const clearCookies = (res) => {
   res.clearCookie(ACTIVE_USER);
   res.clearCookie(ACCESS_TOKEN);
 };
+
+router.post(PATHS.logout, (_, res) => {
+  clearCookies(res);
+  res
+    .status(200)
+    .json({ msg: "Active user's cookies have been removed from browser" });
+});
 
 router.get(PATHS.login, (req, res) => {
   clearCookies(res);
