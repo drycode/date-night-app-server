@@ -26,6 +26,16 @@ const loginResponseSchema = {
   },
 };
 
+const logoutResponseSchema = {
+  type: "object",
+  properties: {
+    msg: {
+      type: "string",
+      example: "Active user's cookies have been removed from browser",
+    },
+  },
+};
+
 const accessTokenSchema = {
   type: "string",
   description: "A Bearer prefixed access token",
@@ -89,4 +99,5 @@ module.exports = {
   accessTokenSchema,
   postJWTTestPayloadSchema,
   postSignupPayloadSchema,
+  logoutResponseSchema,
 };

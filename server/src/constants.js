@@ -24,6 +24,7 @@ module.exports = {
     apiBase: "/api/v1",
     auth: "/auth",
     login: "/login",
+    logout: "/logout",
     jwtTest: "/jwt-test",
   },
   DATABASE_NAME: "primaryDateNightDb",
