@@ -1,12 +1,13 @@
 services:
-#   backend:
-#     image: date-app/server
-#     build: ./server
-#     ports:
-#       - "3000:3000"
-#     links:
-#       - mongodb
-  
+  backend:
+    image: date-app/server
+    build: ./server
+    ports:
+      - "443:3000"
+    links:
+      - mongodb
+    volumes:
+      - /home/ec2-user/newer_certs:/new_certs
   mongodb: 
     image: mongo
     container_name: date-app-mongodb
@@ -21,7 +22,6 @@ services:
     volumes:
       - ./init-db.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./tmp/data/db:/data/db
-
     ports: 
       - 27017:27017
     expose:

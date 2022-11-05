@@ -22,15 +22,22 @@ const logUserIn = (req, res, user, submittedPassword) => {
       res.status(500).json(error._message);
     } else if (match) {
       const token = generateToken(user);
-
+      console.log("Edits are working as expected");
       res
         .status(200)
         .cookie(ACTIVE_USER, encodeURIComponent(user._id), {
-          Secure: false,
-          SameSite: "None",
+	  httpOnly: true,
+	  secure: true,
+          sameSite: "none",
           encode: String,
+	  expire: 360000 + Date.now()
         })
-        .cookie(ACCESS_TOKEN, token, { httpOnly: true })
+        .cookie(ACCESS_TOKEN, token, { 
+		httpOnly: true, 
+		sameSite: "none", 
+		secure: true, 
+		expire: 360000 + Date.now()
+ 	})
 
         .json({ token: token, userId: user._id });
     } else res.status(403).json({ error: "passwords do not match" });

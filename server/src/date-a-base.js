@@ -19,6 +19,16 @@ const cardsRoute = require("./routes/cards");
 const healthRoute = require("./routes/health");
 const cors = require("cors");
 
+const http = require('http');
+const https = require('https');
+const privateKey  = fs.readFileSync('/new_certs/tls.key', 'utf8');
+const certificate = fs.readFileSync('/new_certs/tls.crt', 'utf8');
+
+const credentials = {key: privateKey, cert: certificate};
+
+const httpsServer = https.createServer(credentials, app);
+
+
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
@@ -53,7 +63,8 @@ app.use(helmet());
 let data = JSON.stringify(swaggerDocument);
 fs.writeFileSync("swagger.json", data);
 
-app.listen(port, async () => {
+
+httpsServer.listen(3000, async () => {
   await mongoClient.connect();
 
   console.log(`Example app listening at http://localhost:${port}`);
