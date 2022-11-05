@@ -26,18 +26,18 @@ const logUserIn = (req, res, user, submittedPassword) => {
       res
         .status(200)
         .cookie(ACTIVE_USER, encodeURIComponent(user._id), {
-	  httpOnly: true,
-	  secure: true,
+          httpOnly: true,
+          secure: true,
           sameSite: "none",
           encode: String,
-	  expire: 360000 + Date.now()
+          expire: 360000 + Date.now(),
         })
-        .cookie(ACCESS_TOKEN, token, { 
-		httpOnly: true, 
-		sameSite: "none", 
-		secure: true, 
-		expire: 360000 + Date.now()
- 	})
+        .cookie(ACCESS_TOKEN, token, {
+          httpOnly: true,
+          sameSite: "none",
+          secure: true,
+          expire: 360000 + Date.now(),
+        })
 
         .json({ token: token, userId: user._id });
     } else res.status(403).json({ error: "passwords do not match" });
