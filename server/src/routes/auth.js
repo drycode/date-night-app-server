@@ -7,7 +7,7 @@ const { encryptionRounds } = require('../constants');
 const tokenSecret = process.env.TOKEN_SECRET;
 const { PATHS } = require('../constants');
 const jwt = require('jsonwebtoken');
-const { verify } = require("../helpers");
+const { verify } = require('../helpers');
 
 const ACTIVE_USER = 'activeUser';
 const ACCESS_TOKEN = 'accessToken';
@@ -41,10 +41,8 @@ const clearCookies = (res) => {
 };
 
 router.post(PATHS.logout, (_, res) => {
-  clearCookies(res);
-  res
-    .status(200)
-    .json({ msg: "Active user's cookies have been removed from browser" });
+	clearCookies(res);
+	res.status(200).json({ msg: "Active user's cookies have been removed from browser" });
 });
 
 router.get(PATHS.login, (req, res) => {
@@ -113,3 +111,7 @@ function generateToken(user) {
 }
 
 module.exports = router;
+
+function count(id) {
+	return (id.innerHTML = parseInt(id.innerHTML) + 1);
+}
